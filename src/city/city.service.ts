@@ -26,7 +26,12 @@ export class CityService {
 
   async addCity(createCityDto: CityDto): Promise<City> {
     const newCity = this.cityRepository.create(createCityDto);
-    newCity.id = uuidv4();
+    var id = uuidv4();
+    while(await this.cityRepository.findOne({ where: { id } })) {
+      id = uuidv4();
+    }
+    newCity.id = id;
     return this.cityRepository.save(newCity);
   }
 }
+
