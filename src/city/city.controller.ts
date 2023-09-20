@@ -7,6 +7,11 @@ import { City } from './city.entity';
 export class CityController {
   constructor(private readonly cityService: CityService) {}
 
+  @Get()
+  async getAllCities(): Promise<City[]> {
+    return await this.cityService.findAllCities();
+  }
+
   @Get(':id')
   async getCity(@Param('id') id: string): Promise<City> {
     return await this.cityService.findOneById(id);

@@ -3,6 +3,7 @@ import { CityDto } from './city.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { City } from './city.entity';
 import { Repository } from 'typeorm';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class CityService {
@@ -11,8 +12,8 @@ export class CityService {
     private readonly cityRepository: Repository<City>,
   ) {}
 
-  getCity(): string {
-    return 'This is a city';
+  async findAllCities(): Promise<City[]> {
+    return this.cityRepository.find();
   }
 
   async findOneById(id: string): Promise<City> {
@@ -25,15 +26,7 @@ export class CityService {
 
   async addCity(createCityDto: CityDto): Promise<City> {
     const newCity = this.cityRepository.create(createCityDto);
-    newCity.id = generateUniqueId();
+    newCity.id = uuidv4();
     return this.cityRepository.save(newCity);
   }
-}
-
-function generateUniqueId() {
-  const section1 = Math.random().toString(16).substring(2, 10);
-  const section2 = Math.random().toString(16).substring(2, 10);
-  const section3 = Math.random().toString(16).substring(2, 10);
-  const section4 = Math.random().toString(16).substring(2, 10);
-  return `${section1}-${section2}-${section3}-${section4}`;
 }
